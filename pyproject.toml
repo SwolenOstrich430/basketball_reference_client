@@ -6,7 +6,7 @@
     name = "basketball-reference-client"
     version = "0.1.0"
     authors = [
-      { name="Peter Connelly", email="pconnelly898@gmail.com" },
+      { name="Peter Connelly", email="pconnelly898@gmail.com" }
     ]
     description = "A wrapper around vishaalagartha/basketball_reference_scraper"
     readme = "README.md"
