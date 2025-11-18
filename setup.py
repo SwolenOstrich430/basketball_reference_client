@@ -7,7 +7,7 @@ setuptools.setup(
     author_email="pconnelly898@gmail.com",
     license="MIT",
     description="A wrapper around https://github.com/vishaalagartha/basketball_reference_scraper",
-    long_description=long_description,
+    long_description="boop",
     long_description_content_type="text/markdown",
     url="https://github.com/SwolenOstrich430/basketball_reference_client",
     packages=setuptools.find_packages(),
