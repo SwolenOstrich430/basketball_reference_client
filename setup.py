@@ -20,10 +20,10 @@ setuptools.setup(
     python_requires=">=3.6",
     install_requires=[
         'pandas',
-        'basketball_reference_scraper'
+        'basketball-reference-scraper @ git+https://github.com/SwolenOstrich430/basketball_reference_scraper.git'
     ],
     extras_require={
-        'test': ['pytest'],
+        'test': ['pytest', 'pytest-mock'],
     },
     keywords=[
         "nba",

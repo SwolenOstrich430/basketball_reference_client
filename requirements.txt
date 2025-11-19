@@ -1,5 +1,5 @@
 attrs==25.4.0
-basketball-reference-scraper==2.0.0
+basketball-reference-scraper @ git+https://github.com/SwolenOstrich430/basketball_reference_scraper.git@a7d712a2060e64ac90c0cf42cba9eaec06af19b4
 beautifulsoup4==4.14.2
 bs4==0.0.2
 certifi==2025.11.12
