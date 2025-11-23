@@ -20,6 +20,7 @@ setuptools.setup(
     python_requires=">=3.6",
     install_requires=[
         'pandas',
+        'nba_api',
         'basketball-reference-scraper @ git+https://github.com/SwolenOstrich430/basketball_reference_scraper.git@8fcde3e1496d6c0dd16397551a75c6ab70b65f40'
     ],
     extras_require={
