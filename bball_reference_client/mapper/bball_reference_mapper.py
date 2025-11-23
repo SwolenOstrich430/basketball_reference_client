@@ -14,8 +14,9 @@ class BballReferenceMapper:
 
     def get_team_from_df(self, raw_team: DataFrame) -> TeamDto:
         return TeamDto(
-            raw_team['TEAM'],
-            self.get_team_name_by_identifier(raw_team['TEAM'])
+            raw_team['abbreviation'],
+            raw_team['full_name'],
+            raw_team['id']
         )
 
     def get_roster_from_df(

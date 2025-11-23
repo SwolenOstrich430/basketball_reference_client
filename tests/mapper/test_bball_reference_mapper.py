@@ -12,19 +12,9 @@ GET_ROSTER_RESP_FILE = "./tests/data/get_roster_response.json"
 GET_SCHEDULE_RESPONSE = "./tests/data/get_schedule_response.json"
 GET_BOX_SCORE_RESPONSE_HOME = "./tests/data/get_box_score_response_home.json"
 GET_BOX_SCORE_RESPONSE_AWAY = "./tests/data/get_box_score_response_away.json"
+GET_TEAMS_RESPONSE_FILE = "./tests/data/get_teams_response.json"
 TEST_TEAM_IDENTIFIER = "CHI"
 class TestBballReferenceMapper():
-    
-    @pytest.fixture
-    def mapper(self):
-        return BballReferenceMapper()
-    
-    @pytest.fixture
-    def valid_df(self):
-        return pd.DataFrame({
-            'TEAM': ['CHO', 'CHI'], 
-            'EXPECTED_NAME': ['CHARLOTTE HORNETS', 'CHICAGO BULLS']
-        })
     
     def setup_method(self):
         self.mapper = BballReferenceMapper()
@@ -32,6 +22,7 @@ class TestBballReferenceMapper():
         self.test_data = {
             "get_roster_response": pd.read_json(GET_ROSTER_RESP_FILE),
             "get_schedule_response": pd.read_json(GET_SCHEDULE_RESPONSE),
+            "get_teams_response": pd.read_json(GET_TEAMS_RESPONSE_FILE),
             "get_box_score_response": {}
         }
 
@@ -56,14 +47,15 @@ class TestBballReferenceMapper():
         assert(self.dnp_stats is not None)
 
     def test_get_team_from_df_returns_a_team_dto_when_given_valid_df(
-        self,
-        mapper,
-        valid_df
+        self
     ):
-        for _, row in valid_df.iterrows():
-            team = mapper.get_team_from_df(row)
-            assert team.name.lower() == row['EXPECTED_NAME'].lower()
-            assert team.identifier.lower() == row['TEAM'].lower()
+        assert len(self.test_data['get_teams_response']) == 30
+        
+        for _, row in self.test_data['get_teams_response'].iterrows():
+            team = self.mapper.get_team_from_df(row)
+            assert team.name.lower() == row['full_name'].lower()
+            assert team.identifier.lower() == row['abbreviation'].lower()
+            assert team.external_id == row['id']
     
     def test_get_roster_from_df_returns_a_roster_dto_given_valid_df(self):
         df = self.test_data['get_roster_response']
