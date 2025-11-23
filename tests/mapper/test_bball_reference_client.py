@@ -3,6 +3,7 @@ import os
 from datetime import datetime 
 import pandas as pd 
 from nba_api.stats.static import teams as official_teams
+from nba_api.stats.endpoints.commonteamroster import CommonTeamRoster
 from basketball_reference_scraper import teams
 from basketball_reference_scraper import seasons
 from basketball_reference_scraper import box_scores
@@ -27,8 +28,9 @@ class TestBballReferenceClient():
         teams_df = pd.DataFrame(official_teams.get_teams())
         teams_df.to_json(GET_TEAMS_RESPONSE_FILE)
         
-        df = teams.get_roster(TEST_TEAM_IDENTIFIER, datetime.now().year)
-        df.to_json(GET_ROSTER_RESP_FILE, indent=4) 
+        roster_df = CommonTeamRoster(team_id=teams_df.iloc[0]['id'], season="2024-25")
+        roster_df = roster_df.common_team_roster.get_data_frame()
+        roster_df.to_json(GET_ROSTER_RESP_FILE, indent=4) 
 
         df1 = seasons.get_schedule(datetime.now().year)
         df1.to_json(GET_SCHEDULE_RESPONSE, indent=4)
@@ -47,7 +49,7 @@ class TestBballReferenceClient():
         df3[away_team_identifier].to_json(GET_BOX_SCORE_RESPONSE_AWAY, indent=4)
 
     def setup_method(self):
-        # self.refresh_test_data()
+        self.refresh_test_data()
 
         self.client =  BballReferenceClient()
         self.team_name = "CHI"
@@ -95,7 +97,7 @@ class TestBballReferenceClient():
 
         ret_val = self.client.get_teams_raw()
         mock_team_client.get_teams.assert_called()
-        assert(type(ret_val), pd.DataFrame)
+        assert isinstance(type(ret_val), pd.DataFrame)
 
     def test_get_roster_returns_a_roster_dto(self, mocker):
         mocked_method = mocker.patch.object(
@@ -116,36 +118,7 @@ class TestBballReferenceClient():
         )
         
     def test_get_roster_raw_returns_a_data_frame(self, mocker): 
-        mock_client = mocker.Mock()
-        mock_client.get_roster.return_value = self.test_data['get_roster_response']
-        
-        mocker.patch.object(
-            self.client,
-            '_get_roster_client',
-            return_value=mock_client
-        )
-
         df = self.client.get_roster_raw(self.team_name)
-
-        assert(len(df) > 0)
-        assert isinstance(df, pd.DataFrame)
-
-    def test_get_roster_raw_uses_current_season_if_supplied_is_null(self, mocker):
-        mock_client = mocker.Mock()
-        mock_client.get_roster.return_value = self.test_data['get_roster_response']
-        
-        mocker.patch.object(
-            self.client,
-            '_get_roster_client',
-            return_value=mock_client
-        )
-
-        df = self.client.get_roster_raw(self.team_name)
-
-        mock_client.get_roster.assert_called_with(
-            TEST_TEAM_IDENTIFIER, 
-            datetime.now().year
-        )
 
         assert(len(df) > 0)
         assert isinstance(df, pd.DataFrame)

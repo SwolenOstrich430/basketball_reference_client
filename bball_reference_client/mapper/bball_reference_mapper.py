@@ -22,12 +22,12 @@ class BballReferenceMapper:
     def get_roster_from_df(
         self, 
         team_identifier: str,
-        season_end_year: int,
+        season_start_year: int,
         raw_players: DataFrame
     ) -> RosterDto:
         return RosterDto(
             team_identifier, 
-            season_end_year, 
+            season_start_year, 
             self.get_players_from_df(raw_players)
         )
 

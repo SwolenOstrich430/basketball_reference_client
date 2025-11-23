@@ -1,16 +1,16 @@
 class PlayerDto():
     def __init__(
-        self, number: int, player: str, pos: str, height: str,
-        weight: int, birth_date: int, nationality: str, 
-        experience: str, college: str
+        self, num: int, player: str, position: str, height: str,
+        weight: int, birth_date: int, exp: str, school: str, 
+        player_id: int, **kwargs
     ):
-        self.number = number 
+        self.number = num 
         names = player.split(" ")
         self.first_name = names[0]
         self.last_name = names[1]
-        self.pos = pos
+        self.position = position
         self.height = height
         self.weight = weight
         self.birth_date = birth_date
-        self.nationality = nationality
-        self.college = college
+        self.college = school
+        self.external_id = player_id

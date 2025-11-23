@@ -4,6 +4,7 @@ from datetime import date
 
 import pandas as pd 
 from nba_api.stats.static import teams
+from nba_api.stats.endpoints.commonteamroster import CommonTeamRoster
 from basketball_reference_scraper import seasons
 from basketball_reference_scraper import box_scores
 
@@ -19,7 +20,6 @@ class BballReferenceClient():
     
     def __init__(self):
         self._set_teams_client(teams)
-        self._set_roster_client(teams)
         self._set_season_client(seasons)
         self._set_stats_client(box_scores)
         self.mapper = BballReferenceMapper()
@@ -42,23 +42,25 @@ class BballReferenceClient():
         )
         
     def get_roster(self, team: str, year: int = None) -> RosterDto:
-        if year is None:
-            year = datetime.now().year
-
         return self.mapper.get_roster_from_df(
             team,
             year,
             self.get_roster_raw(team, year)
         )
 
-    def get_roster_raw(self, team: str, year: int = None) -> pd.DataFrame:
-        if year is None:
-            year = datetime.now().year
+    def get_roster_raw(
+        self, 
+        team_identifier: str, 
+        season_start_year: int = None
+    ) -> pd.DataFrame:
+        season = self._get_formatted_season(season_start_year)
+        team_id = self._get_team_id_from_identifier(team_identifier)
 
-        return self._get_roster_client().get_roster(
-            team, 
-            year
+        raw_roster = CommonTeamRoster(
+            team_id=team_id, season=season
         )
+        
+        return raw_roster.common_team_roster.get_data_frame()
     
     def get_season_schedule(self, year: int = None):
         return self.mapper.get_games_from_df(
@@ -99,6 +101,24 @@ class BballReferenceClient():
         )
     
     # private 
+    
+    def _get_team_id_from_identifier(self, team_identifier: str) -> int:
+        teams = self.get_teams()
+        
+        for team in teams: 
+            if team.identifier.lower() == team_identifier.lower():
+                return team.external_id
+
+        raise ValueError(
+            f"No matching team found for identifier: {team_identifier}"
+        )
+
+    def _get_formatted_season(self, start_year: int = None) -> str:
+        if start_year is None:
+            start_year = datetime.now().year
+        
+        end_year = str(start_year)[-2:]
+        return f"{start_year}-{end_year}"
     
     def _get_teams_client(self) -> ModuleType:
         return self.teams_client

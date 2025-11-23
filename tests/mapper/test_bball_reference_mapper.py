@@ -67,8 +67,8 @@ class TestBballReferenceMapper():
             df 
         )
 
-        assert(roster.season_end_year == year)
-        assert(roster.season_start_year == year - 1)
+        assert(roster.season_end_year == year + 1)
+        assert(roster.season_start_year == year)
         assert(roster.team_identifier == self.team_name)
         self._assert_players_equal_df(roster.players, df)
 
@@ -215,10 +215,10 @@ class TestBballReferenceMapper():
             for i in range(len(players)):
                 assert players[i].first_name == df.iloc[i]['player'].split(" ")[0]
                 assert players[i].last_name == df.iloc[i]['player'].split(" ")[1]
-                assert players[i].number == df.iloc[i]['number']
-                assert players[i].pos == df.iloc[i]['pos']
+                assert players[i].number == df.iloc[i]['num']
+                assert players[i].position == df.iloc[i]['position']
                 assert players[i].height == df.iloc[i]['height']
                 assert players[i].weight == df.iloc[i]['weight']
                 assert players[i].birth_date == df.iloc[i]['birth_date']
-                assert players[i].nationality == df.iloc[i]['nationality']
-                assert players[i].college == df.iloc[i]['college']
+                assert players[i].college == df.iloc[i]['school']
+                assert players[i].external_id == df.iloc[i]['player_id']
