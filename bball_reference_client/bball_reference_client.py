@@ -37,7 +37,9 @@ class BballReferenceClient():
         ))
     
     def get_teams_raw(self) -> pd.DataFrame:
-        return self._get_teams_client().get_teams()
+        return pd.DataFrame(
+            self._get_teams_client().get_teams()
+        )
         
     def get_roster(self, team: str, year: int = None) -> RosterDto:
         if year is None:

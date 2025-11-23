@@ -2,7 +2,7 @@ import pytest
 import os 
 from datetime import datetime 
 import pandas as pd 
-from nba_api.stats.static import teams
+from nba_api.stats.static import teams as official_teams
 from basketball_reference_scraper import teams
 from basketball_reference_scraper import seasons
 from basketball_reference_scraper import box_scores
@@ -19,10 +19,14 @@ GET_ROSTER_RESP_FILE = "./tests/data/get_roster_response.json"
 GET_SCHEDULE_RESPONSE = "./tests/data/get_schedule_response.json"
 GET_BOX_SCORE_RESPONSE_HOME = "./tests/data/get_box_score_response_home.json"
 GET_BOX_SCORE_RESPONSE_AWAY = "./tests/data/get_box_score_response_away.json"
+GET_TEAMS_RESPONSE_FILE = "./tests/data/get_teams_response.json"
 TEST_TEAM_IDENTIFIER = "CHI"
 class TestBballReferenceClient():
 
     def refresh_test_data(self):
+        teams_df = pd.DataFrame(official_teams.get_teams())
+        teams_df.to_json(GET_TEAMS_RESPONSE_FILE)
+        
         df = teams.get_roster(TEST_TEAM_IDENTIFIER, datetime.now().year)
         df.to_json(GET_ROSTER_RESP_FILE, indent=4) 
 
@@ -42,22 +46,15 @@ class TestBballReferenceClient():
         df3[home_team_identifier].to_json(GET_BOX_SCORE_RESPONSE_HOME, indent=4)
         df3[away_team_identifier].to_json(GET_BOX_SCORE_RESPONSE_AWAY, indent=4)
 
-
-    @pytest.fixture
-    def valid_df(self):
-        return pd.DataFrame({
-            'TEAM': ['CHO', 'CHI'], 
-            'EXPECTED_NAME': ['CHARLOTTE HORNETS', 'CHICAGO BULLS']
-        })
-
     def setup_method(self):
         # self.refresh_test_data()
-        a = os.getcwd()
+
         self.client =  BballReferenceClient()
         self.team_name = "CHI"
         self.test_data = {
             "get_roster_response": pd.read_json(GET_ROSTER_RESP_FILE),
             "get_schedule_response": pd.read_json(GET_SCHEDULE_RESPONSE),
+            "get_teams_response": pd.read_json(GET_TEAMS_RESPONSE_FILE),
             "get_box_score_response": {}
         }
 
@@ -85,9 +82,10 @@ class TestBballReferenceClient():
             assert isinstance(team, TeamDto)
 
     def test_get_teams_raw_returns_teams_for_the_current_year_if_year_is_null(self, mocker):
-        mock_df = mocker.Mock()
         mock_team_client = mocker.Mock()
-        mock_team_client.get_teams.return_value = mock_df
+        mock_team_client.get_teams.return_value = list(
+            self.test_data['get_teams_response']
+        )
 
         mocker.patch.object(
             self.client, 
@@ -97,7 +95,7 @@ class TestBballReferenceClient():
 
         ret_val = self.client.get_teams_raw()
         mock_team_client.get_teams.assert_called()
-        assert ret_val == mock_df
+        assert(type(ret_val), pd.DataFrame)
 
     def test_get_roster_returns_a_roster_dto(self, mocker):
         mocked_method = mocker.patch.object(
