@@ -2,6 +2,7 @@ import pytest
 import os 
 from datetime import datetime 
 import pandas as pd 
+from nba_api.stats.static import teams
 from basketball_reference_scraper import teams
 from basketball_reference_scraper import seasons
 from basketball_reference_scraper import box_scores
@@ -86,7 +87,7 @@ class TestBballReferenceClient():
     def test_get_teams_raw_returns_teams_for_the_current_year_if_year_is_null(self, mocker):
         mock_df = mocker.Mock()
         mock_team_client = mocker.Mock()
-        mock_team_client.get_team_ratings.return_value = mock_df
+        mock_team_client.get_teams.return_value = mock_df
 
         mocker.patch.object(
             self.client, 
@@ -95,9 +96,7 @@ class TestBballReferenceClient():
         )
 
         ret_val = self.client.get_teams_raw()
-        mock_team_client.get_team_ratings.assert_called_with(
-            datetime.now().year
-        )
+        mock_team_client.get_teams.assert_called()
         assert ret_val == mock_df
 
     def test_get_roster_returns_a_roster_dto(self, mocker):

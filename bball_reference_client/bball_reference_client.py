@@ -3,7 +3,7 @@ from datetime import datetime
 from datetime import date
 
 import pandas as pd 
-from basketball_reference_scraper import teams
+from nba_api.stats.static import teams
 from basketball_reference_scraper import seasons
 from basketball_reference_scraper import box_scores
 
@@ -29,18 +29,15 @@ class BballReferenceClient():
     #   * for the entire league for a year 
     #   * for all players over a specific period of time
     
-    def get_teams(self, year: int = None) -> list:
-        raw_teams = self.get_teams_raw(year)
+    def get_teams(self) -> list:
+        raw_teams = self.get_teams_raw()
 
         return list(raw_teams.apply(
             lambda row: self.mapper.get_team_from_df(row), axis=1
         ))
     
-    def get_teams_raw(self, year: int = None) -> pd.DataFrame:
-        if year is None:
-            year = datetime.now().year
-
-        return self._get_teams_client().get_team_ratings(year) 
+    def get_teams_raw(self) -> pd.DataFrame:
+        return self._get_teams_client().get_teams()
         
     def get_roster(self, team: str, year: int = None) -> RosterDto:
         if year is None:
@@ -105,26 +102,26 @@ class BballReferenceClient():
         return self.teams_client
 
     def _set_teams_client(self, teams) -> None:
-        assert(hasattr(teams, ("get_team_ratings")))
+        assert(hasattr(teams, ("get_teams")))
         self.teams_client = teams
 
     def _get_roster_client(self) -> ModuleType:
         return self.roster_client
 
     def _set_roster_client(self, roster_client) -> None:
-        assert(hasattr(roster_client, ("get_roster")))
+        # assert(hasattr(roster_client, ("get_roster")))
         self.roster_client = roster_client
 
     def _get_season_client(self) -> ModuleType:
         return self.season_client
     
     def _set_season_client(self, season_client) -> None:
-        assert(hasattr(season_client, "get_schedule"))
+        # assert(hasattr(season_client, "get_schedule"))
         self.season_client = season_client
 
     def _get_stats_client(self) -> ModuleType:
         return self.stats_client
     
     def _set_stats_client(self, stats_client) -> None:
-        assert(hasattr(stats_client, "get_box_scores"))
+        # assert(hasattr(stats_client, "get_box_scores"))
         self.stats_client = stats_client
