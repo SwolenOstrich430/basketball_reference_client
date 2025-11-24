@@ -38,6 +38,20 @@ class BballReferenceMapper:
             lambda row: PlayerDto(**row), axis=1
         ).tolist() 
     
+    def get_games_from_df(self, raw_schedule: DataFrame) -> list[GameDto]:
+        games = []
+
+        for _, row in raw_schedule.iterrows():
+            games.append(GameDto(
+                away_team_id=row['awayTeam_teamId'],
+                away_team_identifier=row['awayTeam_teamTricode'],
+                home_team_id=row['homeTeam_teamId'],
+                home_team_identifier=row['homeTeam_teamTricode'],
+                start_time=row['gameDateTimeUTC']
+            ))
+            
+        return games 
+    
     def get_box_score_from_df(self, raw_box_score: DataFrame) -> BoxScoreDto:
         dict = {}
 
@@ -46,7 +60,7 @@ class BballReferenceMapper:
             
             if row['teamId'] not in dict:
                 dict[row['teamId']] = []
-                
+
             dict[row['teamId']].append(game_stats)
 
         # games can only take place between two teams
