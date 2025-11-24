@@ -1,12 +1,12 @@
 class GameStatsDto():
     def __init__(
-        self, external_id: int, mp: float, fgm_2p: int, fga_2p: int, 
+        self, external_id: int, mp: str, fgm_2p: int, fga_2p: int, 
         fgm_3p: int, fga_3p: int, ftm: int, fta: int, 
         orb: int, drb: int, ast: int, stl: int, blk: int, 
         tov: int, pf: int, plus_minus: int
     ):
         self.external_id = int(external_id)
-        self.mp = float(mp)
+        self.mp = mp
         self.fgm_2p = int(fgm_2p)
         self.fga_2p = int(fga_2p)
         self.fgm_3p = int(fgm_3p)
