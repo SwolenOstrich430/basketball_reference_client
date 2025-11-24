@@ -3,12 +3,12 @@ from bball_reference_client.dto.game_stats_dto import GameStatsDto
 class BoxScoreDto():
     def __init__(
         self,
-        team_1_identifier: str,
-        team_2_identifier: str,
-        team_1_stats: list[GameStatsDto],
-        team_2_stats: list[GameStatsDto]
+        team_one_external_id: str,
+        team_two_external_id: str,
+        team_one_stats: list[GameStatsDto],
+        team_two_stats: list[GameStatsDto]
     ):
-        self.team_1_identifier = team_1_identifier
-        self.team_2_identifier = team_2_identifier
-        self.team_1_stats = team_1_stats
-        self.team_2_stats = team_2_stats
+        self.team_one_external_id = team_one_external_id
+        self.team_two_external_id = team_two_external_id
+        self.team_one_stats = team_one_stats
+        self.team_two_stats = team_two_stats
