@@ -1,18 +1,11 @@
 class GameStatsDto():
     def __init__(
-        self, player: str, mp: any, fgm_2p: int, fga_2p: int, 
+        self, external_id: int, mp: float, fgm_2p: int, fga_2p: int, 
         fgm_3p: int, fga_3p: int, ftm: int, fta: int, 
         orb: int, drb: int, ast: int, stl: int, blk: int, 
         tov: int, pf: int, plus_minus: int
     ):
-        self.player_name = player 
-
-        if type(mp) == str and mp.lower() in ['dnp', 'did not play']:
-            mp = 0
-
-        if plus_minus is None: 
-            plus_minus = 0
-
+        self.external_id = int(external_id)
         self.mp = float(mp)
         self.fgm_2p = int(fgm_2p)
         self.fga_2p = int(fga_2p)
