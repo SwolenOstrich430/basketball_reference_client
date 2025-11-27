@@ -21,6 +21,9 @@ class GameDto():
         away_team_identifier: str,
         start_time: datetime 
     ):
+        if isinstance(start_time, str):
+            start_time = datetime.fromisoformat(start_time)
+            
         self.matchup = MatchupDto(
             home_team_id=home_team_id,
             home_team_identifier=home_team_identifier,
