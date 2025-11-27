@@ -42,15 +42,18 @@ class BballReferenceMapper:
         games = []
 
         for _, row in raw_schedule.iterrows():
-            games.append(GameDto(
-                away_team_id=row['awayTeam_teamId'],
-                away_team_identifier=row['awayTeam_teamTricode'],
-                home_team_id=row['homeTeam_teamId'],
-                home_team_identifier=row['homeTeam_teamTricode'],
-                start_time=row['gameDateTimeUTC']
-            ))
+            games.append(self.get_game_from_dict(row))
             
         return games 
+    
+    def get_game_from_dict(self, dict: dict) -> GameDto:
+        return GameDto(
+            away_team_id=dict['awayTeam_teamId'],
+            away_team_identifier=dict['awayTeam_teamTricode'],
+            home_team_id=dict['homeTeam_teamId'],
+            home_team_identifier=dict['homeTeam_teamTricode'],
+            start_time=dict['gameDateTimeUTC']
+        )
     
     def get_box_score_from_df(self, raw_box_score: DataFrame) -> BoxScoreDto:
         dict = {}
