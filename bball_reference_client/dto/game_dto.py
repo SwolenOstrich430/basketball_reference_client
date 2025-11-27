@@ -23,7 +23,7 @@ class GameDto():
     ):
         if isinstance(start_time, str):
             start_time = datetime.fromisoformat(start_time)
-            
+
         self.matchup = MatchupDto(
             home_team_id=home_team_id,
             home_team_identifier=home_team_identifier,
@@ -38,5 +38,5 @@ class GameDto():
             "home_team_identifier": self.matchup.home_team_identifier,
             "away_team_id": self.matchup.away_team_id,
             "away_team_identifier": self.matchup.away_team_identifier,
-            "start_time": self.start_time.isoformat()
+            "start_time": self.start_time
         }
