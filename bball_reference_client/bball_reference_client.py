@@ -63,6 +63,9 @@ class BballReferenceClient():
         return self.mapper.get_games_from_df(
             self.get_schedule_raw(year)
         )
+    
+    def get_game_from_dict(self, dict: dict) -> GameDto:
+        return self.mapper.get_game_from_dict(dict)
 
     # TODO: currently, this won't include playoffs
     # TODO: also won't include advanced stats  
